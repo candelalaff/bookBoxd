@@ -1,11 +1,14 @@
-package com.proyecto.bookBoxd.model; // paquete donde se agrupan las entidades del modelo
+package com.proyecto.bookBoxd.model; 
 
-// Importo las anotaciones necesarias de JPA y Lombok
+
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
 import java.io.Serializable;
-
+/*clase auxiliar --> contenedor para la clave primaria compuesta de la entidad EstadoLectura
+ * no tiene su propia tabla de datos pero permite que JPA identifique de forma única
+ *  una fila en la tabla EstadoLectura usando las combinaciones de usuarioId y libroId.
+ */
 @Embeddable // esta clase se puede embebir como clave compuesta en otra entidad
 @Getter // genera automáticamente los métodos get
 @Setter // genera automáticamente los métodos set
