@@ -7,7 +7,7 @@ import lombok.*; // Anotaciones Lombok para evitar boilerplate
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity // esta clase va a ser una entidad persistente (tabla en la BD)
+@Entity // Esta clase va a ser una entidad persistente (tabla en la BD)
 @Data // Lombok: genera getters, setters, equals, hashCode, toString
 @NoArgsConstructor // Constructor vacío (requerido por JPA)
 @AllArgsConstructor // Constructor con todos los campos
@@ -23,7 +23,7 @@ public class ListaPersonalizada {
 
     private String descripcion;
 
-    // Por defecto, la lista es pública. 
+    // Por defecto, la lista es pública. Con @Builder.Default, Lombok lo respeta.
     @Builder.Default
     private boolean esPublica = true;
 
@@ -36,8 +36,8 @@ public class ListaPersonalizada {
     @ManyToMany
     @JoinTable(
         name = "lista_libros", // Nombre de la tabla intermedia
-        joinColumns = @JoinColumn(name = "lista_id"), // clave foranea a esta entidad
-        inverseJoinColumns = @JoinColumn(name = "libro_id") // clave foranea al otro lado de la relación
+        joinColumns = @JoinColumn(name = "lista_id"), // FK a esta entidad
+        inverseJoinColumns = @JoinColumn(name = "libro_id") // FK al otro lado de la relación
     )
     @Builder.Default
     private Set<Libro> libros = new HashSet<>(); // Usamos HashSet para evitar duplicados

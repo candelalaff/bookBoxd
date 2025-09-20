@@ -46,7 +46,7 @@ public class Reseña {
     @JoinColumn(name = "libro_id")
     private Libro libro;
     
- // Método de validación personalizado. Se ejecuta automáticamente al intentar guardar la entidad.
+    // Método de validación personalizado. Se ejecuta automáticamente al intentar guardar la entidad.
     // La anotación @AssertTrue espera que el método devuelva 'true'.
     @AssertTrue(message = "La calificación debe ser un múltiplo de 0.5 (ej: 1.0, 1.5, 2.0).")
     private boolean isCalificacionValida() {

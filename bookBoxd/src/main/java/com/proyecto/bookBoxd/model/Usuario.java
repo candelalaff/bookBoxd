@@ -10,14 +10,12 @@ import lombok.*; // Anotaciones de Lombok
 import java.util.Set;
 import java.util.HashSet;
 
-
 @Entity // Indica que esta clase es una entidad JPA
 @Data // Lombok: genera getters, setters, equals, hashCode y toString
 @NoArgsConstructor // Lombok: genera constructor sin argumentos
 @AllArgsConstructor // Lombok: genera constructor con todos los campos
 @Builder // Lombok: implementa el patrón de diseño Builder
 public class Usuario {
-
 
     @Id // id es la clave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY) // configura la generacion de valores para la clave primaria
@@ -31,23 +29,21 @@ public class Usuario {
 
     // Validación del nombre:
     @NotBlank(message = "El nombre no puede estar vacío") // - No puede estar en blanco
-    @Size(max = 100, message = "El nombre no puede tener más de 100 caracteres") // Maximo 100 caracteres
+    @Size(max = 100, message = "El nombre no puede tener más de 100 caracteres") // Máximo 100 caracteres
     @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "El nombre solo puede contener letras y espacios")  // - Solo letras y espacios (con tildes y ñ incluidas)
     private String nombre;
 
-     // Validación del apellido (mismas que nombre)
+    // Validación del apellido (mismas que nombre)
     @NotBlank(message = "El apellido no puede estar vacío")
     @Size(max = 100, message = "El apellido no puede tener más de 100 caracteres")
     @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$", message = "El apellido solo puede contener letras y espacios")
     private String apellido;
 
     // Validación del email:
-   
     @Column(unique = true)  // - No puede repetirse (restricción en base de datos)
     @NotBlank(message = "El email no puede estar vacío") // - No puede estar vacío
     @Email(message = "Ingrese un formato de email válido") // - Debe tener formato válido (ej: persona@dominio.com) 
     private String email;
-
 
     // Validación de la contraseña
     @NotBlank(message = "La contraseña no puede estar vacía")  // - No puede estar vacía
@@ -58,7 +54,6 @@ public class Usuario {
     @Builder.Default
     private boolean perfilPrivado = false;
 
-     
     // Relación uno a muchos con listas personalizadas (el usuario tiene muchas listas)
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
