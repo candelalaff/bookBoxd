@@ -1,4 +1,4 @@
-package com.proyecto.bookBoxd.model; // paquete donde se agrupan las entidades del modelo
+package com.proyecto.bookBoxd.model; 
 
 // Importo las anotaciones necesarias
 import jakarta.persistence.*;
@@ -11,11 +11,11 @@ import lombok.*;
 @AllArgsConstructor // constructor completo
 public class EstadoLectura {
 
-    @EmbeddedId // esta es la clave compuesta embebida con usuarioId y libroId
+    @EmbeddedId // esta es la clave primaria compuesta embebida con usuarioId y libroId
     private EstadoLecturaId id;
 
     @ManyToOne
-    @MapsId("usuarioId") //vincula el campo usuarioId del ID compuesto con esta relación
+    @MapsId("usuarioId") //vincula el campo usuarioId, del ID compuesto, con esta relación
     @JoinColumn(name = "usuario_id") // columna en la tabla que referencia a Usuario
     private Usuario usuario;
 
@@ -23,7 +23,8 @@ public class EstadoLectura {
     @MapsId("libroId") // vincula el campo libroId del ID compuesto con esta relación
     @JoinColumn(name = "libro_id") // columna en la tabla que referencia a Libro
     private Libro libro;
-
+    
+    //campo adicional
     @Enumerated(EnumType.STRING) // guarda el estado (valor del enum) como texto en la bbd
     private Estado estado; // enum que representa el estado de lectura: LEIDO, LEYENDO, etc.
 
