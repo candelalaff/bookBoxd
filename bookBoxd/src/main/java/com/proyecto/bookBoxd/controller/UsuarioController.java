@@ -63,7 +63,7 @@ public class UsuarioController {
     }
 
     // Este es mi endpoint **`PUT`** para actualizar los datos de un usuario.
-    // Ya lo tengo corregido: ahora recibe el `UsuarioCrearDto` para validar los campos nuevos (como la contraseña).
+    // recibe el `UsuarioCrearDto` para validar los campos nuevos (como la contraseña).
     // Lo convierto a entidad a través del mapper y llamo al servicio pasándole el ID y los datos transformados.
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioCrearDto usuarioDto) {
