@@ -10,7 +10,7 @@ import java.io.Serializable;
  *  una fila en la tabla EstadoLectura usando las combinaciones de usuarioId y libroId.
  */
 
-@Embeddable // esta clase se puede embebir como clave compuesta en otra entidad
+@Embeddable // esta clase se puede embebir como clave compuesta en otra entidad (vincula la clase compuesta)
 @Getter // genera automáticamente los métodos get
 @Setter // genera automáticamente los métodos set
 @NoArgsConstructor // constructor vacío requerido por JPA

@@ -1,47 +1,60 @@
 package com.proyecto.bookBoxd.controller;
 
+import com.proyecto.bookBoxd.dto.LibroDto;
+import com.proyecto.bookBoxd.dto.LibroCrearDto;
+import com.proyecto.bookBoxd.mapper.LibroMapper;
 import com.proyecto.bookBoxd.model.Libro;
 import com.proyecto.bookBoxd.service.LibroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping ("/api/libros") //ruta base para todos los endpoints de este controlador.
-
+@RequestMapping("/api/libros") // ruta base para todos los endpoints de este controlador.
 public class LibroController {
-	//inyecta la instancia de libroService ->logica de negocio se encarga la capa de servicio
-	@Autowired
+
+    @Autowired
     private LibroService libroService;
+
+    @Autowired
+    private LibroMapper libroMapper;
 	
-	@PostMapping
-    public Libro createLibro(@RequestBody Libro libro) { //toma el cuerpo JSON de la solicitud
-		//y lo convierte en un objeto Libro.
-        return libroService.saveLibro(libro);
+    // Crea un nuevo libro usando el DTO de entrada y activando las validaciones
+    @PostMapping
+    public ResponseEntity<LibroDto> createLibro(@Valid @RequestBody LibroCrearDto libroCrearDto) { 
+        Libro libroEntity = libroMapper.toEntity(libroCrearDto);
+        Libro guardado = libroService.saveLibro(libroEntity);
+        return ResponseEntity.ok(libroMapper.toDto(guardado));
     }
 	
-	@GetMapping
-    public List<Libro> getAllLibros() { //mapea los get para obtener todos los libros
-        return libroService.findAllLibros();
+    // Mapea los GET para obtener todos los libros convertidos en DTOs seguros
+    @GetMapping
+    public ResponseEntity<List<LibroDto>> getAllLibros() { 
+        List<Libro> libros = libroService.findAllLibros();
+        List<LibroDto> librosDto = libros.stream()
+                .map(libroMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(librosDto);
     }
 	
-	@GetMapping("/{id}")// mapea los get que tiene un id en la url
-    public ResponseEntity<Libro> getLibroById(@PathVariable Long id) { //Extrae el ID de la URL.
-        return libroService.findLibroById(id)
-                // Si el libro se encuentra, devuelve una respuesta HTTP 200 (OK) con el objeto del libro en el cuerpo.
+    // Mapea los GET que tienen un ID en la URL
+    @GetMapping("/{id}")
+    public ResponseEntity<LibroDto> getLibroById(@PathVariable Long id) { 
+        Optional<Libro> libro = libroService.findLibroById(id);
+        return libro.map(libroMapper::toDto)
                 .map(ResponseEntity::ok)
-                //  Si el libro no se encuentra, devuelve HTTP 404 (Not Found).
                 .orElse(ResponseEntity.notFound().build());
     }
 	
-	// Mapea los DELETE para eliminar un libro por su ID.
+    // Mapea los DELETE para eliminar un libro por su ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLibro(@PathVariable Long id) {
         libroService.deleteLibro(id);
-        // Devuelve una respuesta HTTP 204 (No Content) -> la eliminación fue exitosa sin cuerpo de respuesta.
         return ResponseEntity.noContent().build();
     }
-
 }
