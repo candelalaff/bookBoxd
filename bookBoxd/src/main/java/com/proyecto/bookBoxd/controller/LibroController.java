@@ -8,7 +8,7 @@ import com.proyecto.bookBoxd.service.LibroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.proyecto.bookBoxd.model.Genero;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -56,5 +56,14 @@ public class LibroController {
     public ResponseEntity<Void> deleteLibro(@PathVariable Long id) {
         libroService.deleteLibro(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    //Endpoint REST para obtener el catálogo completo de géneros,
+    //retorna el conjunto de valores definidos en el Enum Genero para dinamizar
+    //los filtros y selectores en el cliente de Angular.
+    //@return ResponseEntity con el array de constantes del enum Genero y HTTP Status 200 (OK).
+    @GetMapping("/generos")
+    public ResponseEntity<Genero[]> obtenerGeneros() {
+        return ResponseEntity.ok(Genero.values());
     }
 }
