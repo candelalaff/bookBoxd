@@ -10,15 +10,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component; // Importación necesaria para la anotación @Component
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * Filtro de seguridad que intercepta las peticiones HTTP una sola vez (OncePerRequestFilter)
- * para extraer el token JWT del header Authorization y establecer el contexto de seguridad.
- */
+// Filtro de seguridad que intercepta las peticiones HTTP una sola vez (OncePerRequestFilter)
+// para extraer el token JWT del header Authorization y establecer el contexto de seguridad.
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -47,9 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * Extrae el token eliminando el prefijo "Bearer ".
-     */
+    // Extrae el token eliminando el prefijo "Bearer ".
     private String obtenerJwtDeLaPeticion(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

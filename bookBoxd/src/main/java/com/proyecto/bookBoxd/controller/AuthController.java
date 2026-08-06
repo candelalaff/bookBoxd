@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 // Controlador REST encargado de exponer las rutas publicas para el alta de usuarios e inicio de sesion
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     @Autowired
