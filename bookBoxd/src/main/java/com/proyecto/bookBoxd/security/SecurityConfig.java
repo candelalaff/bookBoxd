@@ -41,18 +41,22 @@ public class SecurityConfig {
             // 2. Deshabilita CSRF (Cross-Site Request Forgery) ya que trabajamos con API REST sin estado
             .csrf(csrf -> csrf.disable())
             
-            // 3. Define la gestión de sesiones como STATELESS (sin estado, dependemos 100% de los tokens JWT)
+            // 3. Permito que H2 pueda mostrarse dentro de un frame
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+            
+            // 4. Define la gestión de sesiones como STATELESS (sin estado, dependemos 100% de los tokens JWT)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
-            // 4. Reglas de autorización para los endpoints
+            // 5. Reglas de autorización para los endpoints
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite peticiones Preflight de Angular sin bloqueo
                 .requestMatchers("/api/auth/**").permitAll()           // Habilita login y registro sin autenticación previa
-                .requestMatchers("/api/libros/buscar").permitAll()     // Habilita la búsqueda en Google Books sin pedir token
-                .anyRequest().authenticated()                           // Exige autenticación token JWT para el resto de la API
+                .requestMatchers("/api/libros/buscar").permitAll()  // Habilita la búsqueda en Google Books sin pedir token
+                .requestMatchers("/h2-console/**").permitAll()    // Permito el acceso a la consola web de H2 durante el desarrollo
+                .anyRequest().authenticated()                      // Exige autenticación token JWT para el resto de la API
             )
             
-            // 5. Agrega el filtro JWT personalizado antes del filtro de autenticación por defecto de Spring
+            // 6. Agrega el filtro JWT personalizado antes del filtro de autenticación por defecto de Spring
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
