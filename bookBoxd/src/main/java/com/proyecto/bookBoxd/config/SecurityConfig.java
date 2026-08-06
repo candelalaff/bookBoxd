@@ -12,11 +12,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 /**
  * Clase de configuración global de Spring Security.
  */
 @Configuration
+@EnableMethodSecurity // Permite usar @PreAuthorize en los controladores
 public class SecurityConfig {
 
     @Bean
