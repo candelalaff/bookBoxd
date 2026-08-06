@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { Libro } from '../../models/libro';
+import { LibroService } from '../../services/libro';
 
 @Component({
   selector: 'app-libro-list',
@@ -13,19 +13,34 @@ import { Libro } from '../../models/libro';
 })
 export class LibroListComponent implements OnInit {
 
-  // Lista mock para maquetar la interfaz antes de consumir la API
-  libros: Libro[] = [
-    { id: 1, titulo: 'Alas de Sangre', autor: 'Rebecca Yarros', genero: 'Fantasía', rating: 4.8 },
-    { id: 2, titulo: 'Alas de Hierro', autor: 'Rebecca Yarros', genero: 'Fantasía', rating: 4.7 },
-    { id: 3, titulo: 'Alas de Ónix', autor: 'Rebecca Yarros', genero: 'Fantasía', rating: 4.9 }
-  ];
+  librosGoogle: any[] = [];
+  terminoBusqueda: string = 'fantasy';
+  cargando: boolean = false;
 
   constructor(
     private authService: AuthService,
+    private libroService: LibroService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cargarLibros();
+  }
+
+  cargarLibros(): void {
+    this.cargando = true;
+    this.libroService.buscarLibrosGoogle(this.terminoBusqueda).subscribe({
+      next: (data: any) => {
+        // Obtenemos los items que responde Google Books
+        this.librosGoogle = data.items || [];
+        this.cargando = false;
+      },
+      error: (err: any) => {
+        console.error('Error al obtener libros de Google:', err);
+        this.cargando = false;
+      }
+    });
+  }
 
   logout(): void {
     this.authService.logout();

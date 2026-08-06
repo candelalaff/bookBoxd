@@ -31,6 +31,7 @@ public class SecurityConfig {
     }
 
     // Define la cadena de filtros de seguridad HTTP (SecurityFilterChain)
+ // Define la cadena de filtros de seguridad HTTP (SecurityFilterChain)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -45,8 +46,10 @@ public class SecurityConfig {
             
             // 4. Reglas de autorización para los endpoints
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll() // Habilita login y registro sin autenticación previa
-                .anyRequest().authenticated()               // Exige autenticación token JWT para el resto de la API
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite peticiones Preflight de Angular sin bloqueo
+                .requestMatchers("/api/auth/**").permitAll()           // Habilita login y registro sin autenticación previa
+                .requestMatchers("/api/libros/buscar").permitAll()     // Habilita la búsqueda en Google Books sin pedir token
+                .anyRequest().authenticated()                           // Exige autenticación token JWT para el resto de la API
             )
             
             // 5. Agrega el filtro JWT personalizado antes del filtro de autenticación por defecto de Spring

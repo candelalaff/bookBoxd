@@ -4,14 +4,16 @@ import com.proyecto.bookBoxd.dto.LibroDto;
 import com.proyecto.bookBoxd.dto.LibroCrearDto;
 import com.proyecto.bookBoxd.mapper.LibroMapper;
 import com.proyecto.bookBoxd.model.Libro;
+import com.proyecto.bookBoxd.model.Genero;
+import com.proyecto.bookBoxd.service.GoogleBooksService;
 import com.proyecto.bookBoxd.service.LibroService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.proyecto.bookBoxd.model.Genero;
-import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 // Controlador REST encargado de exponer las rutas para la gestion del catalogo de libros
 @RestController
 @RequestMapping("/api/libros")
+@CrossOrigin(origins = "http://localhost:4200")
 public class LibroController {
 
     @Autowired
@@ -26,6 +29,9 @@ public class LibroController {
 
     @Autowired
     private LibroMapper libroMapper;
+
+    @Autowired
+    private GoogleBooksService googleBooksService;
 
     // Crea un nuevo libro usando el DTO de entrada y activando las validaciones
     // Solo permitido para usuarios con rol administrador
@@ -86,5 +92,12 @@ public class LibroController {
     @GetMapping("/generos")
     public ResponseEntity<Genero[]> obtenerGeneros() {
         return ResponseEntity.ok(Genero.values());
+    }
+
+    // Endpoint para buscar libros reales consumiendo la API publica de Google Books
+    @GetMapping("/buscar")
+    public ResponseEntity<String> buscarLibrosEnGoogle(@RequestParam(defaultValue = "fantasy") String q) {
+        String respuestaGoogle = googleBooksService.buscarLibrosEnGoogle(q);
+        return ResponseEntity.ok(respuestaGoogle);
     }
 }
