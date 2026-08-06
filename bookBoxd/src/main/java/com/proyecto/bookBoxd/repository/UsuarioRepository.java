@@ -16,4 +16,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	Optional<Usuario> findByEmail(String email);
     //metodo para buscar x alias
     Optional<Usuario> findByAlias(String alias);
+    
+    // Metodos para verificar existencia antes de registrar un nuevo usuario
+    boolean existsByEmail(String email);
+    boolean existsByAlias(String alias);
 }

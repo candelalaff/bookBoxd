@@ -50,6 +50,11 @@ public class Usuario {
     @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")   // - Debe tener al menos 6 caracteres
     private String password;
     
+ // Rol del usuario para la seguridad y permisos de Spring Security
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Rol rol = Rol.ROLE_USER;
+    
     // Por defecto, el perfil del usuario es público (false)
     @Builder.Default
     private boolean perfilPrivado = false;
