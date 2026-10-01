@@ -16,6 +16,7 @@ export class LibroListComponent implements OnInit {
   librosGoogle: any[] = [];
   terminoBusqueda: string = 'fantasy';
   cargando: boolean = false;
+  mensajeError: string | null = null;
 
   constructor(
     private authService: AuthService,
@@ -29,14 +30,23 @@ export class LibroListComponent implements OnInit {
 
   cargarLibros(): void {
     this.cargando = true;
+    this.mensajeError = null;
+
     this.libroService.buscarLibrosGoogle(this.terminoBusqueda).subscribe({
       next: (data: any) => {
-        // Obtenemos los items que responde Google Books
-        this.librosGoogle = data.items || [];
+        // El backend puede responder con un JSON de error (cuota agotada, etc.)
+        // en vez de la respuesta normal de Google Books
+        if (data && data.error) {
+          this.mensajeError = data.error;
+          this.librosGoogle = [];
+        } else {
+          this.librosGoogle = data.items || [];
+        }
         this.cargando = false;
       },
       error: (err: any) => {
         console.error('Error al obtener libros de Google:', err);
+        this.mensajeError = 'No se pudo cargar el catalogo en este momento.';
         this.cargando = false;
       }
     });

@@ -10,7 +10,7 @@ export class AuthService {
 
   // Direccion exacta donde esta corriendo nuestro backend en Spring Boot
   // src/app/services/auth.ts
-  private apiUrl = 'http://localhost:8080/api/auth'; 
+  private apiUrl = 'http://localhost:8085/api/auth'; 
   
   // Nombre de la clave con la que guardaremos el token en el navegador
   private tokenKey = 'jwt_token';
