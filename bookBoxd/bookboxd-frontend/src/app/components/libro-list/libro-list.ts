@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
 import { LibroService } from '../../services/libro';
 
 @Component({
   selector: 'app-libro-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './libro-list.html',
   styleUrl: './libro-list.css'
 })
@@ -21,7 +22,10 @@ export class LibroListComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private libroService: LibroService,
-    private router: Router
+    private router: Router,
+    // Inyecto ChangeDetectorRef porque la pantalla se me quedaba "dormida"
+    // y no mostraba las portadas hasta que yo hacía un clic extra en cualquier lado.
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
@@ -43,11 +47,19 @@ export class LibroListComponent implements OnInit {
           this.librosGoogle = data.items || [];
         }
         this.cargando = false;
+        
+        // Le aviso a la vista de Angular que los datos ya llegaron y que fuerce
+        // la actualización del HTML YA MISMO, sin esperar a que el usuario haga clic.
+        this.cdr.detectChanges(); 
       },
       error: (err: any) => {
         console.error('Error al obtener libros de Google:', err);
         this.mensajeError = 'No se pudo cargar el catalogo en este momento.';
         this.cargando = false;
+        
+        // Lo pongo acá también por las dudas, para que si hay un error
+        // el cartelito rojo aparezca instantáneamente.
+        this.cdr.detectChanges(); 
       }
     });
   }
